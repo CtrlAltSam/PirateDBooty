@@ -1,0 +1,1 @@
+C:\Users\epics\Documents\Projects\Rust\PirateDBooty\piratedbooty\target\debug\piratedbooty.exe: C:\Users\epics\Documents\Projects\Rust\PirateDBooty\piratedbooty\src\lib.rs C:\Users\epics\Documents\Projects\Rust\PirateDBooty\piratedbooty\src\main.rs
