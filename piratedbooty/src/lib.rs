@@ -2,6 +2,9 @@ use std::collections::HashMap;
 use std::fs::{OpenOptions, File};
 use std::io::{Write, BufReader, BufRead};
 
+use serde::{Serialize, Deserialize};
+
+#[derive(Serialize, Deserialize, Debug)]
 pub struct PirateDBooty {
     data: std::collections::HashMap<String, String>,
 }
@@ -24,15 +27,13 @@ impl PirateDBooty {
     }
 
     pub fn load(path: &str) -> Self {
-        let mut db = PirateDBooty::new();
         if let Ok(file) = File::open(path) {
-            for line in BufReader::new(file).lines().flatten() {
-                if let Some((k, v)) = line.split_once('=') {
-                    db.data.insert(k.to_string(), v.to_string());
-                }
+            let reader = BufReader::new(file);
+            if let Ok(db) = bincode::deserialize_from(reader){
+                return db;
             }
         }
-        db
+        PirateDBooty::new()
     }
 
     pub fn persist(&self, path: &str) {
@@ -43,8 +44,6 @@ impl PirateDBooty {
             .open(path)
             .unwrap();
 
-        for (k, v) in &self.data {
-            writeln!(file, "{}={}", k, v).unwrap();
-        }
+        bincode::serialize_into(&mut file, &self).unwrap();
     }
 }
